@@ -1,0 +1,59 @@
+﻿@page "/"
+
+<style>
+    .dropArea input[type=file] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+</style>
+
+<h1>Kitraffic Digital simulator client</h1>
+
+<p>
+    <div class="dropArea @dropClass rounded">
+        Drag and drop your file here or click to open file loading dialogue...
+        <InputFile id="inputDrop"
+                   class="dropAreaInput"
+                   OnChange="LoadFiles"
+                   @ondragenter="HandleDragEnter"
+                   @ondragleave="HandleDragLeave"
+                   accept="application/JSON" />
+    </div>
+    @if ((fileTypeError || fileSizeError))
+    {
+        <ul class="validation-errors mb-0">
+            @if (fileTypeError)
+            {
+                <li class="validation-message">Only image files are accepted.</li>
+            }
+            @if (fileSizeError)
+            {
+                <li class="validation-message">The max file size is @MaxFileSizeMB MB.</li>
+            }
+        </ul>
+    }
+    <div class="col-12">
+        <ul>
+            @if (file != null)
+            {
+                <li>
+                    @file.Name
+                    <button class="btn btn-link text-danger p-0 pl-1" type="button"
+                            @onclick="@(e => RemoveFile(file))">
+                        <small class="align-text-bottom">Remove</small>
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+</p>
+<div class="col-12">
+    <button class="btn btn-link" type="button"
+            @onclick="@(e => SendToSimulator(file))">
+        <small class="align-text-bottom">Send to simulator</small>
+    </button>
+</div>
+
